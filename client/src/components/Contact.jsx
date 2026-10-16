@@ -4,6 +4,37 @@ import Icon from "./Icons.jsx";
 const initialForm = { name: "", email: "", message: "" };
 const API_BASE_URL = (import.meta.env.VITE_API_URL || "").replace(/\/+$/, "");
 
+const contactChannels = [
+  {
+    title: "Direct Email",
+    value: "debuglife1221@gmail.com",
+    href: "mailto:debuglife1221@gmail.com",
+    icon: "mail",
+    badge: "Fastest Response",
+  },
+  {
+    title: "Phone / Telegram",
+    value: "+251 903166512",
+    href: "tel:+251903166512",
+    icon: "phone",
+    badge: "Direct Call",
+  },
+  {
+    title: "GitHub Profile",
+    value: "github.com/debug-life21",
+    href: "https://github.com/debug-life21",
+    icon: "github",
+    badge: "Code Repositories",
+  },
+  {
+    title: "LinkedIn Profile",
+    value: "linkedin.com/in/wendmachew-tsegaye",
+    href: "https://linkedin.com/in/wendmachew-tsegaye",
+    icon: "linkedin",
+    badge: "Professional Network",
+  },
+];
+
 function getFieldError(name, value) {
   if (!value.trim()) return "This field is required.";
   if (name === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) {
@@ -32,10 +63,10 @@ export default function Contact() {
 
   function getInputClass(name) {
     const invalid = touched[name] && getFieldError(name, form[name]);
-    return `mt-2 w-full rounded-xl border bg-slate-950/60 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-600 transition focus:outline-none ${
+    return `mt-2 w-full rounded-xl border bg-slate-950/70 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 transition focus:outline-none ${
       invalid
         ? "border-rose-400/60 ring-2 ring-rose-400/15 focus:border-rose-300"
-        : "border-slate-700/80 focus:border-cyan-300/60 focus:ring-2 focus:ring-cyan-300/10"
+        : "border-slate-800 focus:border-cyan-300/60 focus:ring-2 focus:ring-cyan-300/15"
     }`;
   }
 
@@ -73,7 +104,7 @@ export default function Contact() {
       setTouched({});
       setNotice({
         type: "success",
-        message: "Thanks for reaching out. Your message is on its way!",
+        message: "Thanks for reaching out! Your message was sent successfully.",
       });
     } catch (error) {
       setNotice({
@@ -81,7 +112,7 @@ export default function Contact() {
         message:
           error instanceof Error
             ? error.message
-            : "A network error occurred. Please try again.",
+            : "A network error occurred. Feel free to email me directly at debuglife1221@gmail.com.",
       });
     } finally {
       setIsSending(false);
@@ -89,24 +120,65 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" className="section-space">
+    <section id="contact" className="section-space relative">
       <div className="section-shell">
-        <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
-          <div className="pt-2">
-            <p className="">Let&apos;s talk</p>
-            <h2 className="mt-4 max-w-lg text-3xl font-semibold leading-tight tracking-[-0.04em] text-slate-100 sm:text-4xl">
-              Have a good idea?{" "}
-              <span className="text-cyan-300">Let&apos;s build it.</span>
+        <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+          <div>
+            <div className="eyebrow mb-3">
+              <span className="eyebrow-dot" />
+              Get in Touch
+            </div>
+            <h2 className="font-heading text-3xl font-extrabold tracking-tight text-white sm:text-4xl lg:text-5xl">
+              Let&apos;s Build Something <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-violet-400">Exceptional</span>
             </h2>
-            <p className="mt-5 max-w-md text-sm leading-7 text-slate-400">
-              Have a project in mind, a question, or just want to say hello?
-              Send a note and I&apos;ll get back to you.
+            <p className="mt-4 text-base leading-relaxed text-slate-300">
+              Have an opening, an interesting project, or want to collaborate on a MERN stack web app or digital marketing campaign? I&apos;d love to hear from you.
             </p>
-            <div className="mt-8 inline-flex items-center gap-3 text-sm text-slate-300">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-700 bg-slate-900/70 text-cyan-200">
-                <Icon name="mail" size={17} />
-              </span>
-              <span>Send a message using the form</span>
+
+            {/* Direct contact cards */}
+            <div className="mt-8 space-y-3">
+              {contactChannels.map((item) => (
+                <a
+                  key={item.title}
+                  href={item.href}
+                  target={item.href.startsWith("http") ? "_blank" : undefined}
+                  rel={item.href.startsWith("http") ? "noreferrer" : undefined}
+                  className="group flex items-center justify-between rounded-2xl border border-slate-800/80 bg-slate-950/60 p-4 transition duration-200 hover:-translate-y-0.5 hover:border-cyan-400/40 hover:bg-slate-900/80 backdrop-blur-sm"
+                >
+                  <div className="flex items-center gap-3.5">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-400/10 text-cyan-300 border border-cyan-400/20 group-hover:bg-cyan-400/20 transition">
+                      <Icon name={item.icon} size={18} />
+                    </span>
+                    <div>
+                      <p className="text-xs font-semibold text-slate-400">
+                        {item.title}
+                      </p>
+                      <p className="text-sm font-bold text-white group-hover:text-cyan-200 transition">
+                        {item.value}
+                      </p>
+                    </div>
+                  </div>
+                  <span className="hidden sm:inline-block rounded-full bg-slate-900 px-2.5 py-1 text-[10px] font-mono font-medium text-slate-400 group-hover:text-cyan-300">
+                    {item.badge}
+                  </span>
+                </a>
+              ))}
+            </div>
+
+            {/* Resume button shortcut */}
+            <div className="mt-6 rounded-2xl border border-cyan-400/25 bg-gradient-to-r from-cyan-950/40 to-slate-950/40 p-4 flex items-center justify-between">
+              <div>
+                <p className="text-xs font-bold text-white">Need a PDF copy of my CV?</p>
+                <p className="text-[11px] text-slate-400">Includes full project &amp; course details</p>
+              </div>
+              <a
+                href="/Wendemu_Resume.pdf"
+                download="Wendemachew_Tsegaye_Resume.pdf"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-cyan-400 px-3.5 py-2 text-xs font-bold text-slate-950 transition hover:bg-cyan-300"
+              >
+                <Icon name="download" size={14} />
+                <span>Get CV</span>
+              </a>
             </div>
           </div>
 
